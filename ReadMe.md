@@ -1,27 +1,33 @@
 Synopsis
 
-At the top of the file there should be a short introduction and/ or overview that explains what the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
-
-Code Example
-
-Show what the library does as concisely as possible, developers should be able to figure out how your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
-
-Motivation
-
-A short description of the motivation behind the creation and maintenance of the project. This should explain why the project exists.
+This project takes in IP addresses from a text file and forwards them onto a web service to create a desired output. In this case it forwards the IP addresses contained in the textfile and outputs the country of origin and the country code to the console.
 
 Installation
 
-Provide code examples and explanations of how to get the project.
+Pull down this github repository, import it to eclipse and run the Runner class. Ensure that the text file is in the project folder.
 
-API Reference
+References
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
+http://stackoverflow.com/questions/13591298/getting-value-of-child-node-from-xml-in-java
 
-Tests
+http://stackoverflow.com/questions/4076910/how-to-retrieve-element-value-of-xml-using-java
 
-Describe and show how to run the tests with code examples.
+http://stackoverflow.com/questions/4138754/getting-an-attribute-value-in-xml-element
 
-Contributors
+http://stackoverflow.com/questions/773012/getting-xml-node-text-value-with-java-dom
 
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
+http://www.informit.com/library/content.aspx?b=STY_XML_21days&seqNum=207
+
+http://stackoverflow.com/questions/22684770/document-builder-from-xml-gives-error
+
+https://community.oracle.com/thread/2313330?tstart=0
+
+https://examples.javacodegeeks.com/core-java/util/arraylist/arraylist-in-java-example-how-to-use-arraylist/
+
+http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+
+http://dev.maxmind.com/geoip/geoip2/web-services/
+
+http://stackoverflow.com/questions/9265719/print-arraylist
+
+http://freegeoip.net/xml/
