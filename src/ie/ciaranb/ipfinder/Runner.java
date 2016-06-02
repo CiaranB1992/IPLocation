@@ -1,28 +1,34 @@
 package ie.ciaranb.ipfinder;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Scanner;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 
 public class Runner {
+	
+	private static String receive;
 
 	    public static void main(String[] args) {
-	    	
+	    		    	
 	    	try{
-				System.out.println("Computer's IPV4 IP: " + InetAddress.getLocalHost().getHostAddress()); //gets Local IP
+				System.out.println("Computer IPV4 IP: " + InetAddress.getLocalHost().getHostAddress()); //gets Local IP
 				
 			}catch (Exception ex){
 				System.out.println("Oops! " + ex.getMessage());
@@ -31,9 +37,9 @@ public class Runner {
 				String url = "http://vallentinsource.com/globalip.php"; //Website that outputs global IP address
 				BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
 				
-				String receive = br.readLine();
+				receive = br.readLine();
 				
-				System.out.println("Global IP: " + receive);
+				System.out.println("Current computer IP: " + receive);
 				
 			}catch (Exception ex){
 				System.out.println("Oops! " + ex.getMessage());
@@ -43,6 +49,7 @@ public class Runner {
 	    	
 			try {
 				ipAddresses = readTextFile("IPList.txt");
+				ipAddresses.add(0, receive);
 			
 				//for(int i = 0; i < lines.size(); i = i + 1){
 		    	for (String ipAddress : ipAddresses) {
@@ -52,7 +59,7 @@ public class Runner {
 					
 			        try {
 			            // Create and send the HTTP request to get country from ip address
-			        	
+			        	//*************************************************************************************
 			            URL url = new URL("http://freegeoip.net/xml/" + ipAddress);
 			            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			
@@ -66,18 +73,38 @@ public class Runner {
 			            }
 			            System.out.println("Successful lookup");
 			
-			            // Get the HTTP response body
+			            // Get the HTTP response body - it is a string in XML form
 			            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 			            StringBuilder sb = new StringBuilder();
 			            String line;
 			            while ((line = br.readLine()) != null) {
 			              sb.append(line);
 			            }
-			
+			            String webServiceResponse = sb.toString();
+			            
+			            // Parse XML string to an XML object
+			            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			            DocumentBuilder builder = factory.newDocumentBuilder();
+			            InputSource is = new InputSource(new StringReader(webServiceResponse));
+			            Document xmlResponse = builder.parse(is);
+			            
+			            //Get the countryName node value
+			            NodeList nodeList1 = xmlResponse.getElementsByTagName("CountryName");
+			            String countryName = "";
+			            countryName = nodeList1.item(0).getChildNodes().item(0).getTextContent();
+		            	
+			            // Get the CountryCode node value
+			            NodeList nodeList = xmlResponse.getElementsByTagName("CountryCode");
+			            String countryCode = "";
+		            	countryCode = nodeList.item(0).getChildNodes().item(0).getTextContent();
+		            	//*************************************************************************************
+		            	// Close down and free resources
 			            conn.disconnect();
 			            br.close();
 			            
-			            System.out.println("Response: " + sb.toString());
+			            System.out.println("Response: " + countryName);
+			            System.out.println("Response: " + countryCode);
+			            System.out.println();
 			
 			        } catch (MalformedURLException m) {
 			              System.out.println(m.getMessage());     
@@ -96,6 +123,7 @@ public class Runner {
 	    public static ArrayList<String> readTextFile(String file) throws FileNotFoundException {
 				
 				ArrayList<String> lines = new ArrayList<String>();
+				
 				
 				Scanner s1 = new Scanner(new File(file));
 				while(s1.hasNextLine()){
